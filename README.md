@@ -29,6 +29,16 @@
 
 ## 데이터베이스 변경 (PostgreSQL)
 1. `pom.xml`에 PostgreSQL 드라이버 추가
+
+예시: 
+```xml
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.5.0</version>
+</dependency>
+```
+
 2. `src/main/resources/application.properties`에서 DB 설정 변경
 
 예시:
@@ -39,6 +49,16 @@ spring.datasource.password=your_db_password
 spring.datasource.driver-class-name=org.postgresql.Driver
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.hibernate.ddl-auto=update
+```
+3. PostgreSQL 데이터베이스 및 유저 생성
+
+PostgreSQL를 설치되어 있지 않다면 [공식 사이트])(https://www.postgresql.org/download/)에서 설치하세요.
+
+```bash
+psql -U postgres
+CREATE DATABASE your_db_name;
+CREATE USER your_db_user WITH PASSWORD 'your_db_password';
+GRANT ALL PRIVILEGES ON DATABASE your_db_name TO your_db_user;
 ```
 
 ## 참고
