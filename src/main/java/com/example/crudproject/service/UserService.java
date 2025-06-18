@@ -5,6 +5,8 @@ import com.example.crudproject.mapper.UserMapper;
 import com.example.crudproject.model.User;
 import com.example.crudproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,11 @@ public class UserService {
                 .stream()
                 .map(UserMapper::toDTO)
                 .toList();
+    }
+
+    public Page<UserDTO> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(UserMapper::toDTO);
     }
 
     public UserDTO createUser(UserDTO userDTO) {
