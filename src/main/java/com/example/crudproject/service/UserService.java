@@ -1,5 +1,7 @@
 package com.example.crudproject.service;
 
+import com.example.crudproject.dto.UserDTO;
+import com.example.crudproject.mapper.UserMapper;
 import com.example.crudproject.model.User;
 import com.example.crudproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +15,34 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository
+                .findAll()
+                .stream()
+                .map(UserMapper::toDTO)
+                .toList();
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = UserMapper.toEntity(userDTO);
+        User savedUser = userRepository.save(user);
+        return UserMapper.toDTO(savedUser);
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> getUserById(Long id) {
+        return userRepository
+                .findById(id)
+                .map(UserMapper::toDTO);
     }
 
-    public User updateUser(Long id, User userDetails) {
+    public Optional<UserDTO> updateUser(Long id, UserDTO userDetails) {
         return userRepository.findById(id)
                 .map(user -> {
                     user.setName(userDetails.getName());
                     user.setEmail(userDetails.getEmail());
-                    return userRepository.save(user);
-                })
-                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+                    User updatedUser = userRepository.save(user);
+                    return UserMapper.toDTO(updatedUser);
+                });
     }
 
     public void deleteUserById(Long id) {
