@@ -32,7 +32,7 @@
 - `POST   /api/auth/login`       : 로그인 (JWT 발급)
 - `POST   /api/auth/register`    : 사용자 등록
 
-## 데이터베이스 변경 (PostgreSQL)
+## 4. 데이터베이스 변경 (PostgreSQL)
 1. `pom.xml`에 PostgreSQL 드라이버 추가
 
 예시: 
@@ -57,7 +57,7 @@ spring.jpa.hibernate.ddl-auto=update
 ```
 환경 변수 상용하는 경우 환경 변수 설정 별도로 설정해야 합니다. 
 
-## 환경 변수 설정
+## 5. 환경 변수 설정
 
 애플리케이션 실행 전 아래 환경 변수를 반드시 설정해야 합니다.
 
@@ -97,8 +97,10 @@ CREATE USER your_db_user WITH PASSWORD 'your_db_password';
 GRANT ALL PRIVILEGES ON DATABASE your_db_name TO your_db_user;
 ```
 
-## 참고
+## 6. 참고
 - H2 콘솔: `http://localhost:8080/h2-console`
 - Postman, curl 등으로 API 테스트 가능
 - IntelliJ Endpoint로 API 테스트도 가능
+- Swagger UI를 통해 API 명세를 확인할 수 있습니다.
+  + 접속 경로: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
