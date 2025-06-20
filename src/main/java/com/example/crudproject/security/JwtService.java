@@ -3,6 +3,8 @@ package com.example.crudproject.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +13,14 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-    private final String secretKey = "qpCLfgeQcVjQnEoCZfQQ5s3pFmPdq8ut";
-    private final Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    @Value("${jwt.secret}")
+    private String secretKey;
+    private Key key;
+
+    @PostConstruct
+    public void init() {
+        key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
 
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
