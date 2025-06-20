@@ -38,13 +38,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+            String token = jwtService.generateToken((UserDetails) authentication.getPrincipal());
 
-        String token = jwtService.generateToken((UserDetails) authentication.getPrincipal());
-
-        return ResponseEntity.ok(Map.of("token", token));
+            return ResponseEntity.ok(Map.of("token", token));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(401)
+                    .body(Map.of("error", "Login information isn't matched"));
+        }
     }
 
     @PostMapping("/register")
