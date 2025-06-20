@@ -1,5 +1,6 @@
 package com.example.crudproject.service;
 
+import com.example.crudproject.dto.RegisterRequest;
 import com.example.crudproject.dto.UserDTO;
 import com.example.crudproject.mapper.UserMapper;
 import com.example.crudproject.model.User;
@@ -7,6 +8,7 @@ import com.example.crudproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,12 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public List<UserDTO> getAllUsers() {
         return userRepository
@@ -54,5 +62,21 @@ public class UserService {
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void register(RegisterRequest request) {
+        // 이메일 중복 체크
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already in use");
+        }
+
+        // 엔티티 생성 및 저장
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setName(request.getName());
+        user.setRole("ROLE_USER");
+
+        userRepository.save(user);
     }
 }
